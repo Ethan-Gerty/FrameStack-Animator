@@ -1,0 +1,13 @@
+{
+  "name": "com.ethangerty.framestackanimator",
+  "version": "0.0.1",
+  "displayName": "FrameStack-Animator",
+  "description": "",
+  "unity": "2022.3",
+  "author": {
+    "name": "Ethan Gerty",
+    "email": "gertyjames05@gmail.com",
+    "url": "https://github.com/Ethan-Gerty"
+  },
+  "type": "library"
+}
