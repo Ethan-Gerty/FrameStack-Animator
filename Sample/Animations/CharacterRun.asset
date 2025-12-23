@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 970380197f4a39340877faa2e3479f3e, type: 3}
+  m_Name: CharacterRun
+  m_EditorClassIdentifier: 
+  loop: 1
+  cels:
+  - sprite: {fileID: 7335685810455876947, guid: 99a00a0d40819c44a843591d3b25254a, type: 3}
+    events:
+    - Step
+  - sprite: {fileID: -909351381785966601, guid: 99a00a0d40819c44a843591d3b25254a, type: 3}
+    events: []
+  - sprite: {fileID: -6299398309769621298, guid: 99a00a0d40819c44a843591d3b25254a, type: 3}
+    events:
+    - Step
+  - sprite: {fileID: -2840295226731100469, guid: 99a00a0d40819c44a843591d3b25254a, type: 3}
+    events: []
+  overrideFps: -1
+  transitionInto: {fileID: 0}
+  transitionStartFrame: 0
+  ignoreTimeScale: 0

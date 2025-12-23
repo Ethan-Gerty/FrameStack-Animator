@@ -1,6 +1,6 @@
 {
   "name": "com.ethangerty.framestackanimator",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "displayName": "FrameStack-Animator",
   "description": "A lightweight, frame-accurate, code-driven sprite animation system designed for deterministic gameplay control.",
   "unity": "2022.3",

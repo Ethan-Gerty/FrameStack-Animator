@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 970380197f4a39340877faa2e3479f3e, type: 3}
+  m_Name: CharJumpToFall
+  m_EditorClassIdentifier: 
+  loop: 0
+  cels:
+  - sprite: {fileID: -42552199, guid: 99a00a0d40819c44a843591d3b25254a, type: 3}
+    events: []
+  - sprite: {fileID: 974831223, guid: 99a00a0d40819c44a843591d3b25254a, type: 3}
+    events: []
+  overrideFps: -1
+  transitionInto: {fileID: 11400000, guid: 0c06171e5d96fdb40a86b2ed96c0d0b1, type: 2}
+  transitionStartFrame: 0
+  ignoreTimeScale: 0

@@ -9,16 +9,14 @@ public class FSAnimator : MonoBehaviour
     [SerializeField] private int defaultFps = 24;
     private int fps;
     private int frame = 0;
-    public FSAnimation currentAnimation = null;
-    public bool paused = false;
-    public bool restartIfSame = false;
+    public FSAnimation currentAnimation {  get; private set; }
 
     // Timing
     private float timer;
     private float frameTime;
 
     // Queued Animation
-    private FSAnimation pendingAnim;
+    public FSAnimation pendingAnim { get; private set; }
     private int pendingStartFrame;
 
     // Events
@@ -26,6 +24,13 @@ public class FSAnimator : MonoBehaviour
     public event Action<FSAnimation, FSAnimation> onAnimationChanged;
     public event Action<FSAnimation> onAnimationFinished;
     public event Action<string> animEvent;
+
+    // Checks
+    public bool isPaused { get; private set; }
+    public bool isFinished { get; private set; }
+    public bool isPlaying(FSAnimation anim) => currentAnimation == anim;
+    public bool hasPendingAnimation() => pendingAnim != null;
+
 
 
 
@@ -47,6 +52,9 @@ public class FSAnimator : MonoBehaviour
             fps = currentAnimation.overrideFps > 0 ? currentAnimation.overrideFps : defaultFps;
         }
 
+        isPaused = false;
+        isFinished = false;
+
         frameTime = 1f / fps;
         timer = frameTime;
         frame = 0;
@@ -60,8 +68,8 @@ public class FSAnimator : MonoBehaviour
     // Update Loop
     private void Update()
     {
-        if(currentAnimation == null || currentAnimation.cels == null || currentAnimation.cels.Count == 0 || paused)
-    {
+        if(currentAnimation == null || currentAnimation.cels == null || currentAnimation.cels.Count == 0 || isPaused || isFinished)
+        {
             if (pendingAnim != null) 
                 AdvanceFrame();
             return;
@@ -87,42 +95,61 @@ public class FSAnimator : MonoBehaviour
 
 
 
-    // Change Animation Function - Changes Animation To Set Frame
-    public void Play(FSAnimation anim)
+    // Play Function, Plays animation from beginning. Restart default is false
+    public void Play(FSAnimation anim, bool restartIfSame = false)
     {
         if (anim == null || anim.cels == null || anim.cels.Count == 0) return;
         if (!restartIfSame && anim == currentAnimation) return;
 
-        if (paused)
-            paused = false;
+        if (isPaused)
+            isPaused = false;
+        if (isFinished)
+            isFinished = false;
 
         pendingAnim = anim;
         pendingStartFrame = 0;
     }
 
-    public void PlayFromFrame(FSAnimation anim, int startFrame)
+    // Play From Frame, Plays Animation From Set startFrame. Restart default Is true
+    public void PlayFromFrame(FSAnimation anim, int startFrame, bool restartIfSame = true)
     {
         if (anim == null || anim.cels == null || anim.cels.Count == 0) return;
         if (!restartIfSame && anim == currentAnimation) return;
 
-        if (paused)
-            paused = false;
+        if (isPaused)
+            isPaused = false;
+        if (isFinished)
+            isFinished = false;
 
         pendingAnim = anim;
         pendingStartFrame = Mathf.Clamp(startFrame, 0, anim.cels.Count - 1);
     }
 
+    // Restarts Current Animation By Just Setting 'frame' Back To 0
     public void Restart()
     {
         frame = 0;
 
-        if (paused)
-            paused = false;
+        if (isPaused)
+            isPaused = false;
+        if (isFinished)
+            isFinished = false;
+    }
+
+    public void Pause()
+    {
+        if (!isPaused)
+            isPaused = true;
+    }
+    public void UnPause()
+    {
+        if (isPaused)
+            isPaused = false;
     }
 
 
 
-    // Frame Advancement, Stops If Animation Isn't Set To Loop
+    // Frame Advancement, Stops If Animation Isn't Set To Loop, Transitions If Has Transition Animation
     private void AdvanceFrame()
     {
         if (pendingAnim != null)
@@ -153,7 +180,6 @@ public class FSAnimator : MonoBehaviour
             } else if (currentAnimation.transitionInto != null)
             {
                 PlayFromFrame(currentAnimation.transitionInto, currentAnimation.transitionStartFrame);
-                timer = frameTime;  // optional: avoids skipping into the next anim after lag
 
                 onAnimationFinished?.Invoke(currentAnimation);
                 return;
@@ -161,9 +187,9 @@ public class FSAnimator : MonoBehaviour
             {
                 frame = currentAnimation.cels.Count - 1;
 
-                if (!paused)
+                if (!isFinished)
                 {
-                    paused = true;
+                    isFinished = true;
                     onAnimationFinished?.Invoke(currentAnimation);
                 }
             }
