@@ -2,56 +2,136 @@
 
 FrameStack Animator is a lightweight, frame-based sprite animation system for Unity, built for **gameplay-driven animation control**.
 
-It focuses on predictable timing, clean transitions, and direct control from code, without relying on Animator Controllers or timeline-based clips.
+It was created to solve common problems encountered when using Unity’s Animator for simple 2D flipbook animation—particularly when animation needs to behave deterministically, respond directly to gameplay logic, and avoid editor-heavy state machines.
+
+This system prioritises **frame accuracy**, **predictable transitions**, and **explicit control from code**.
 
 ---
 
-## What problem does it solve?
+## Why this exists
 
-Unity’s Animator is well-suited to authored, timeline-based animation.  
-FrameStack Animator is designed for cases where animation needs to behave like **game logic**:
+Unity’s Animator is well suited to authored, timeline-based animation.  
+However, for simple sprite animations driven by gameplay state, it can become overly complex or restrictive.
 
-- start animations from any frame
-- guarantee frame-boundary switching (no mid-frame snapping)
-- freeze cleanly on the final frame
-- advance correctly during lag spikes
-- transition between animations without state machines
+FrameStack Animator was built to:
+- guarantee animation changes only occur on frame boundaries
+- allow animations to finish naturally before transitioning
+- support clean non-looping behaviour without exit states
+- provide deterministic timing under variable frame rates
+- expose lightweight animation events without Animation Clips
 
-It is not a replacement for Animator, but an alternative approach for simple 2D, flipbook-style animation where deterministic control matters.
+It is **not intended to replace Unity’s Animator**, but to offer an alternative approach for projects where direct, code-first control is preferred.
 
 ---
 
-## Key features
+## Core Features
 
-- **Frame-accurate playback**  
-  Frames advance on fixed timing, independent of frame rate.
+These define the fundamental behaviour of the system.
+
+- **Frame-accurate sprite animation**  
+  Frames advance at a fixed rate independent of frame rate.
+
+- **Deterministic playback with lag catch-up**  
+  Animations remain in sync during frame drops using a catch-up stepping loop.
 
 - **Queued animation switching**  
-  Animation changes are applied only on frame boundaries.
+  Animation changes are deferred and applied only at frame boundaries, preventing mid-frame snapping.
 
-- **Start-frame control**  
-  Animations can begin from any frame index.
+- **Looping and non-looping animations**  
+  Non-looping animations play once and hold their final frame.
 
-- **Looping and non-looping support**  
-  Non-looping animations finish once and hold their final frame.
+- **Pause-on-completion behaviour**  
+  Finished animations automatically pause on the last frame, preventing repeated events or unintended replays.
 
 - **Transition animations**  
-  Animations can optionally transition into another when they finish.
+  Animations can optionally transition into another animation when they complete.
 
-- **Minimal runtime overhead**  
-  No Animator Controller, Animation Clips, or editor-driven state logic.
+- **Data-driven animation assets**  
+  Animations are defined using ScriptableObjects, keeping data separate from logic.
 
 ---
 
-## Best suited for
+## Advanced Features
 
-- 2D platformers and pixel-art games  
-- Gameplay-driven character animation  
-- UI and VFX flipbook animations  
+These extend the core system but are not required for basic use.
+
+- **Start animations from arbitrary frames**  
+  Useful for anticipation frames, partial loops, or shared animations.
+
+- **Per-animation FPS overrides**  
+  Individual animations can control their playback speed.
+
+- **Unscaled time playback option**  
+  Animations can ignore `Time.timeScale`, suitable for UI or paused gameplay.
+
+- **Per-frame animation events**  
+  Frames can emit string-based events without using Animation Events.
+
+- **Runtime animation lifecycle callbacks**  
+  Includes events for:
+  - frame changes
+  - animation changes
+  - animation completion
+
+---
+
+## Basic Usage
+
+### 1. Create an animation asset
+Right-click in the Project window:
+
+Create → FrameStackAnimator → Animation
+
+Add sprites to the animation’s frame list (`cels`) and configure looping, FPS overrides, or transitions as needed.
+
+
+### 2. Add FSAnimator to a GameObject
+
+Assign a SpriteRenderer and optionally set a default FPS.
+
+```csharp
+FSAnimator animator = GetComponent<FSAnimator>();```
+
+
+### 3. Play animations from code
+
+```animator.Play(idleAnimation);
+animator.Play(runAnimation);
+animator.PlayFromFrame(attackAnimation, 2);```
+
+Animation changes are queued and applied at the next frame boundary.
+
+
+### 4. React to animation events
+
+
+```animator.animEvent += (string evt) =>
+{
+    if (evt == "Footstep")
+        PlayFootstepSound();
+};
+
+animator.onAnimationFinished += (anim) =>
+{
+    Debug.Log($"{anim.name} finished");
+};```
+
+
+## Intended Use Cases
+
+- 2D platformers
+- Pixel-art games
+- Gameplay-driven character animation
+- UI or VFX flipbook animations
 - Projects that prefer code-first animation control
 
----
 
-## Installation (Unity Package Manager)
+## Project Status
 
-Window → Package Manager → + → Add package from git URL…
+FrameStack Animator is actively developed and used in a work-in-progress Unity game.
+
+The core architecture is stable, but the API may evolve as new features and use cases are explored.
+
+## Author
+
+Created by Ethan Gerty as a gameplay-focused animation system designed for clarity, control, and extensibility.

@@ -5,8 +5,20 @@ using UnityEngine;
 public class FSAnimation : ScriptableObject
 {
     public bool loop = false;
-    public List<Sprite> sprites = new List<Sprite>();
+    public List<AnimCel> cels = new List<AnimCel>();
+
+    public int overrideFps = -1;
 
     public FSAnimation transitionInto = null;
-    public int transitionStartFrame;
+    public int transitionStartFrame = 0;
+
+    [Header("For UI")]
+    public bool ignoreTimeScale = false;
+}
+
+[System.Serializable]
+public class AnimCel
+{
+    public Sprite sprite;
+    public List<string> events = new List<string>();
 }
