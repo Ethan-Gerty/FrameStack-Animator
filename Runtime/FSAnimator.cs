@@ -18,6 +18,9 @@ public class FSAnimator : MonoBehaviour
     // Queued Animation
     public FSAnimation pendingAnim { get; private set; }
     private int pendingStartFrame;
+    public FSAnimation queuedAnim { get; private set; }
+    private int queuedStartFrame;
+    private bool overrideTransition = false;
 
     // Events
     public event Action<int> onFrameChanged;
@@ -30,6 +33,7 @@ public class FSAnimator : MonoBehaviour
     public bool isFinished { get; private set; }
     public bool isPlaying(FSAnimation anim) => currentAnimation == anim;
     public bool hasPendingAnimation() => pendingAnim != null;
+    public bool hasQueuedAnimation() => queuedAnim != null;
 
 
 
@@ -125,6 +129,22 @@ public class FSAnimator : MonoBehaviour
         pendingStartFrame = Mathf.Clamp(startFrame, 0, anim.cels.Count - 1);
     }
 
+    public void QueueAfterCurrent(FSAnimation anim, int startFrame, bool overrideTransition = false, bool restartIfSame = true)
+    {
+        if (anim == null || anim.cels == null || anim.cels.Count == 0) return;
+        if (!restartIfSame && anim == currentAnimation) return;
+
+        if (isPaused)
+            isPaused = false;
+        if (isFinished)
+            isFinished = false;
+
+        queuedAnim = anim;
+        queuedStartFrame = Mathf.Clamp(startFrame, 0, anim.cels.Count - 1);
+
+        this.overrideTransition = overrideTransition;
+    }
+
     // Restarts Current Animation By Just Setting 'frame' Back To 0
     public void Restart()
     {
@@ -135,6 +155,8 @@ public class FSAnimator : MonoBehaviour
         if (isFinished)
             isFinished = false;
     }
+
+
 
     public void Pause()
     {
@@ -154,13 +176,7 @@ public class FSAnimator : MonoBehaviour
     {
         if (pendingAnim != null)
         {
-            onAnimationChanged?.Invoke(currentAnimation, pendingAnim);
-
-            currentAnimation = pendingAnim;
-
-            frame = Mathf.Clamp(pendingStartFrame, 0, currentAnimation.cels.Count - 1);
-
-            pendingAnim = null;
+            ApplyAnimation(pendingAnim, pendingStartFrame);
         }
 
 
@@ -176,24 +192,52 @@ public class FSAnimator : MonoBehaviour
         {
             if (currentAnimation.loop)
             {
-                frame = 0;
+                if (queuedAnim != null)
+                {
+                    ApplyAnimation(queuedAnim, queuedStartFrame);
+                } else
+                {
+                    frame = 0;
+                }
             } else if (currentAnimation.transitionInto != null)
             {
-                PlayFromFrame(currentAnimation.transitionInto, currentAnimation.transitionStartFrame);
-
-                onAnimationFinished?.Invoke(currentAnimation);
-                return;
+                if (queuedAnim != null && overrideTransition)
+                {
+                    ApplyAnimation(queuedAnim, queuedStartFrame);
+                } else
+                {
+                    ApplyAnimation(currentAnimation.transitionInto, currentAnimation.transitionStartFrame);
+                }
             } else
             {
-                frame = currentAnimation.cels.Count - 1;
-
-                if (!isFinished)
+                if (queuedAnim != null)
                 {
-                    isFinished = true;
-                    onAnimationFinished?.Invoke(currentAnimation);
+                    ApplyAnimation(queuedAnim, queuedStartFrame);
+                } else
+                {
+                    frame = currentAnimation.cels.Count - 1;
+
+                    if (!isFinished)
+                    {
+                        isFinished = true;
+                        onAnimationFinished?.Invoke(currentAnimation);
+                    }
                 }
             }
         }
+    }
+
+
+
+    private void ApplyAnimation(FSAnimation newAnim, int newFrame)
+    {
+        onAnimationChanged?.Invoke(currentAnimation, newAnim);
+
+        currentAnimation = newAnim;
+        frame = Mathf.Clamp(newFrame, 0, currentAnimation.cels.Count - 1);
+
+        pendingAnim = null;
+        queuedAnim = null;
     }
 
     private void ApplyFrame() // Applies New Frame
