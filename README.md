@@ -89,23 +89,25 @@ Add sprites to the animation’s frame list (`cels`) and configure looping, FPS 
 
 Assign a SpriteRenderer and optionally set a default FPS.
 
-```csharp
-FSAnimator animator = GetComponent<FSAnimator>();```
-
+```
+FSAnimator animator = GetComponent<FSAnimator>();
+```
 
 ### 3. Play animations from code
 
-```animator.Play(idleAnimation);
-animator.Play(runAnimation);
-animator.PlayFromFrame(attackAnimation, 2);```
+```
+animator.Play(idleAnimation);
+animator.Play(runTransition);
+animator.PlayFromFrame(attackAnimation, 2);
+```
 
 Animation changes are queued and applied at the next frame boundary.
 
 
 ### 4. React to animation events
 
-
-```animator.animEvent += (string evt) =>
+```
+animator.animEvent += (string evt) =>
 {
     if (evt == "Footstep")
         PlayFootstepSound();
@@ -114,8 +116,10 @@ Animation changes are queued and applied at the next frame boundary.
 animator.onAnimationFinished += (anim) =>
 {
     Debug.Log($"{anim.name} finished");
-};```
+};
+```
 
+---
 
 ## Intended Use Cases
 
@@ -125,12 +129,15 @@ animator.onAnimationFinished += (anim) =>
 - UI or VFX flipbook animations
 - Projects that prefer code-first animation control
 
+---
 
 ## Project Status
 
 FrameStack Animator is actively developed and used in a work-in-progress Unity game.
 
 The core architecture is stable, but the API may evolve as new features and use cases are explored.
+
+---
 
 ## Author
 
