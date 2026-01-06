@@ -6,6 +6,9 @@ It was created to solve common problems encountered when using Unity’s Animato
 
 This system prioritises **frame accuracy**, **predictable transitions**, and **explicit control from code**.
 
+I made a Dev-Log for this as an insight to how it works if you want to go check it out:
+https://youtu.be/PQa9nJF2XP8
+
 ---
 
 ## Why this exists
