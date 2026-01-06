@@ -2,7 +2,7 @@
 
 FrameStack Animator is a lightweight, frame-based sprite animation system for Unity, built for **gameplay-driven animation control**.
 
-It was created to solve common problems encountered when using Unity’s Animator for simple 2D flipbook animation—particularly when animation needs to behave deterministically, respond directly to gameplay logic, and avoid editor-heavy state machines.
+It was created to solve common problems encountered when using Unity’s Animator for simple 2D flipbook animation, particularly when animation needs to behave deterministically, respond directly to gameplay logic, and avoid editor-heavy state machines.
 
 This system prioritises **frame accuracy**, **predictable transitions**, and **explicit control from code**.
 
