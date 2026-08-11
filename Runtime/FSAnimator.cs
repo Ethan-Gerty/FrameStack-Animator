@@ -1,15 +1,16 @@
 using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class FSAnimator : MonoBehaviour
 {
     // Rendering, Animation and Frames
     [SerializeField] private SpriteRenderer sRenderer;
-    [SerializeField] private int defaultFps = 24;
+    [Min(1)] [SerializeField] public int defaultFps = 24;
     private int fps;
     private int frame = 0;
-    public FSAnimation currentAnimation {  get; private set; }
+    public FSAnimation currentAnimation { get; private set; }
 
     // Timing
     private float timer;
@@ -181,6 +182,15 @@ public class FSAnimator : MonoBehaviour
 
 
         fps = currentAnimation.overrideFps > 0 ? currentAnimation.overrideFps : defaultFps;
+
+        if (fps == 0) // If FPS = 0 Dont Run
+            return;
+        else if (fps < 0) // If FPS < 0 Fix Then Log Warning To User
+        {
+            fps *= -1;
+            Debug.LogWarning("FPS Value is set to negative number.");
+        }
+
         frameTime = 1f / fps;
 
 

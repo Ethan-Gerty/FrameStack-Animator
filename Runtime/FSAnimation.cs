@@ -4,8 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "FSAnimation", menuName = "FrameStackAnimator/Animation", order = 1)]
 public class FSAnimation : ScriptableObject
 {
+    [Header("Animation Variables")]
     public bool loop = false;
-    public List<AnimCel> cels = new List<AnimCel>();
 
     public int overrideFps = -1;
 
@@ -14,6 +14,9 @@ public class FSAnimation : ScriptableObject
 
     [Header("For UI")]
     public bool ignoreTimeScale = false;
+
+    [Header("Frames")]
+    public List<AnimCel> cels = new List<AnimCel>();
 }
 
 [System.Serializable]
