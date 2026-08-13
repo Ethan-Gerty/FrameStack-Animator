@@ -50,8 +50,4 @@ public class FSAnimatorEditor : Editor
             EditorGUILayout.ObjectField("Queued Animation", animator.queuedAnim, typeof(FSAnimation), false);
         }   
     }
-
-
-
-
 }

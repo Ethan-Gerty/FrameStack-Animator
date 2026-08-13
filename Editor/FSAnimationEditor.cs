@@ -6,8 +6,6 @@ public class FSAnimationEditor : Editor
 {
     private SerializedProperty cels;
 
-    private int duplicateCelIndex = 0;
-
     // Preview
     private bool previewPlaying = false;
     private int previewFrame = 0;
@@ -19,6 +17,9 @@ public class FSAnimationEditor : Editor
     // OnEnable
     private void OnEnable()
     {
+        if (target == null)
+            return;
+
         cels = serializedObject.FindProperty("cels");
 
         lastPreviewTime = EditorApplication.timeSinceStartup;
@@ -38,6 +39,9 @@ public class FSAnimationEditor : Editor
     // Draws the Inspector GUI
     public override void OnInspectorGUI()
     {
+        if (target == null)
+            return;
+
         serializedObject.Update();
 
         DrawDefaultInspector();
