@@ -1,16 +1,12 @@
 # FrameStack Animator
 
-> **Deterministic. Lightweight. Explicit.**
-
 FrameStack Animator is a lightweight, frame-based sprite animation system for Unity built for **gameplay-driven animation control**.
 
 It was created as an alternative to using Unity's Animator for simple 2D flipbook animation where animation needs to behave predictably, respond directly to gameplay code, and avoid large editor-driven state machines.
 
 FrameStack focuses on **frame accuracy**, **predictable transitions**, and **explicit control from code**.
 
-I also made a dev-log explaining why I built it and how the core system works:
-
-https://youtu.be/PQa9nJF2XP8
+I also made a dev-log explaining why I built it and how the core system works: https://youtu.be/PQa9nJF2XP8
 
 ---
 
@@ -170,10 +166,6 @@ Every `FSAnimation` asset contains the following settings.
 
 ## Loop
 
-```text
-Loop
-```
-
 When enabled, the animation returns to its first cel after reaching the end.
 
 When disabled, the animation either:
@@ -185,10 +177,6 @@ When disabled, the animation either:
 ---
 
 ## Override FPS
-
-```text
-Override Fps
-```
 
 Controls the playback rate for this specific animation.
 
@@ -210,10 +198,6 @@ Idle Override FPS:      -1
 
 ## Transition Into
 
-```text
-Transition Into
-```
-
 A non-looping animation can automatically continue into another `FSAnimation`.
 
 For example:
@@ -230,10 +214,6 @@ Once the first animation reaches its end, FrameStack switches into the configure
 
 ## Transition Start Frame
 
-```text
-Transition Start Frame
-```
-
 Controls which cel the target transition animation begins from.
 
 For example, an animation could transition into `Run` at cel `2` instead of starting from cel `0`.
@@ -243,10 +223,6 @@ Invalid values are detected and warned about by FrameStack.
 ---
 
 ## Ignore Time Scale
-
-```text
-Ignore Time Scale
-```
 
 When enabled, the animation uses `Time.unscaledDeltaTime`.
 
